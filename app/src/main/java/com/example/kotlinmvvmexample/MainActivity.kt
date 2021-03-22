@@ -49,27 +49,14 @@ class MainActivity : AppCompatActivity() {
                 override fun onChanged(userdata: List<User?>?) {
 
                     userList = userdata as List<User>?
-
-                    for (name in userList!!) {
-                        userData.add(Userdata(0 ,name.name, name.email, name.phone))
-                    }
-
-                    doAsync {
-                        // Put the student in database
-                        mDb.userdao().insertAll(userData)
-
-                        uiThread {
-                            toast("One record inserted.")
-                        }
-                    }
                     Log.e("poppers",userdata.toString())
                     swipeRefresh!!.isRefreshing = false
-                    setRecyclerView(userData)
+                    setRecyclerView(userList)
                 }
             })
         }
 
-    private fun setRecyclerView(userList: List<Userdata>?) {
+    private fun setRecyclerView(userList: List<User>?) {
         userAdapter = UserAdapter(userList)
         if (this.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             recyclerView!!.layoutManager = LinearLayoutManager(this)
