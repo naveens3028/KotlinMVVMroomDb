@@ -15,6 +15,7 @@ class UserWrapper {
 
     @SerializedName("status")
     var status: String? = null
+
     var user: List<Any>?
         get() = mData
         set(data) {

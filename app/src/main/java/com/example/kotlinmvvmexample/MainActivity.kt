@@ -70,7 +70,8 @@ class MainActivity : AppCompatActivity() {
         }
 
     private fun setRecyclerView(userList: List<Userdata>?) {
-        userAdapter = UserAdapter(userList)
+        val users = mDb.userdao().allStudents()
+        userAdapter = UserAdapter(users)
         if (this.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             recyclerView!!.layoutManager = LinearLayoutManager(this)
         } else {
