@@ -5,15 +5,19 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.kotlinmvvmexample.Model.User
 import com.example.kotlinmvvmexample.Model.UserWrapper
+import com.example.kotlinmvvmexample.Network.ApiHelper
 import com.example.kotlinmvvmexample.Network.RetrofitInstance.apiService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-class UserRepository(private val application: Application) {
+class UserRepository(private val apiHelper: ApiHelper) {
 
-    private var users: ArrayList<User>? = ArrayList()
+
+    suspend fun getUsers() = apiHelper.getUsers()[0].user
+
+  /*  private var users: ArrayList<User>? = ArrayList()
     private val mutableLiveData = MutableLiveData<List<User>?>()
 
     fun getMutableLiveData(): MutableLiveData<List<User>?> {
@@ -37,6 +41,6 @@ class UserRepository(private val application: Application) {
             }
         })
         return mutableLiveData
-    }
+    }*/
 
 }

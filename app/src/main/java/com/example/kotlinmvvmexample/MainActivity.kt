@@ -2,7 +2,8 @@ package com.example.kotlinmvvmexample
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -16,10 +17,12 @@ import com.example.kotlinmvvmexample.Adapter.UserAdapter
 import com.example.kotlinmvvmexample.Database.RoomSingleton
 import com.example.kotlinmvvmexample.Database.Userdata
 import com.example.kotlinmvvmexample.Model.User
+import com.example.kotlinmvvmexample.Model.UserWrapper
+import com.example.kotlinmvvmexample.Network.ApiHelper
+import com.example.kotlinmvvmexample.Network.RetrofitInstance
+import com.example.kotlinmvvmexample.Utils.Status
 import com.example.kotlinmvvmexample.ViewModel.MainViewModel
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.toast
-import org.jetbrains.anko.uiThread
+import com.example.kotlinmvvmexample.ViewModel.ViewModelFactory
 
 class MainActivity : AppCompatActivity() {
     var recyclerView: RecyclerView? = null
@@ -38,15 +41,15 @@ class MainActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
         mDb = RoomSingleton.getInstance(applicationContext)
 
-        mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        getUserList()
-        swipeRefresh!!.setOnRefreshListener(OnRefreshListener { getUserList()})
+        mainViewModel = ViewModelProviders.of(this, ViewModelFactory(ApiHelper(RetrofitInstance.apiService))).get(MainViewModel::class.java)
+        setupObservers()
+        swipeRefresh!!.setOnRefreshListener(OnRefreshListener { setupObservers()  })
     }
 
-      fun getUserList() {
+     /* fun getUserList() {
             swipeRefresh!!.isRefreshing = true
-            mainViewModel!!.allUsers.observe(this, object : Observer<List<User?>?> {
-                override fun onChanged(userdata: List<User?>?) {
+            mainViewModel!!.getUsers().observe(this, object : Observer<List<UserWrapper>> {
+                override fun onChanged(userdata: List<UserWrapper>) {
 
                     userList = userdata as List<User>?
 
@@ -67,11 +70,35 @@ class MainActivity : AppCompatActivity() {
                     setRecyclerView(userData)
                 }
             })
-        }
+        }*/
 
-    private fun setRecyclerView(userList: List<Userdata>?) {
-        val users = mDb.userdao().allStudents()
-        userAdapter = UserAdapter(users)
+
+    private fun setupObservers() {
+        mainViewModel?.getUsers()?.observe(this, Observer {
+            it?.let { resource ->
+                when (resource.status) {
+                    Status.SUCCESS -> {
+                        recyclerView!!.visibility = View.VISIBLE
+                        resource.data.let { setRecyclerView(it) }
+                    }
+                    Status.ERROR -> {
+                        recyclerView!!.visibility = View.VISIBLE
+                        Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                    }
+                    Status.LOADING -> {
+                        recyclerView!!.visibility = View.GONE
+                    }
+                }
+            }
+        })
+    }
+
+
+    private fun setRecyclerView(userList: List<User>?) {
+        //val users = mDb.userdao().allStudents()
+
+
+        userAdapter = UserAdapter(userList)
         if (this.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             recyclerView!!.layoutManager = LinearLayoutManager(this)
         } else {

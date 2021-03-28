@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 class UserWrapper {
     @SerializedName("data")
-    private var mData: List<User>? = null
+    var mData: List<User>? = null
 
     @SerializedName("error")
     var error: Boolean? = null
@@ -16,7 +16,7 @@ class UserWrapper {
     @SerializedName("status")
     var status: String? = null
 
-    var user: List<Any>?
+    var user: List<User>?
         get() = mData
         set(data) {
             mData = data as List<User>?

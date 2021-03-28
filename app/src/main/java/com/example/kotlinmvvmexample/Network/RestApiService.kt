@@ -11,18 +11,6 @@ import retrofit2.http.GET
 interface RestApiService {
 
     @GET("bQsLPRKKMi?indent=2")
-    suspend fun userList() : Response<UserWrapper>
+    suspend fun userList() : List<UserWrapper>
 
-    companion object {
-        private var retrofit: Retrofit? = null
-            operator fun invoke(): RestApiService{
-                if (retrofit == null) {
-                    retrofit = Retrofit.Builder()
-                        .baseUrl("https://www.json-generator.com/api/json/get/")
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build()
-                }
-                return retrofit!!.create(RestApiService::class.java)
-            }
-    }
 }

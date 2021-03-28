@@ -10,7 +10,7 @@ import com.example.kotlinmvvmexample.Model.User
 import com.example.kotlinmvvmexample.R
 
 
-class UserAdapter(private val userList: List<Userdata>?) : RecyclerView.Adapter<UserAdapter.BaseViewHolder>() {
+class UserAdapter(private val userList: List<User>?) : RecyclerView.Adapter<UserAdapter.BaseViewHolder>() {
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         holder.onBind(position)
     }
@@ -45,8 +45,8 @@ class UserAdapter(private val userList: List<Userdata>?) : RecyclerView.Adapter<
         override fun onBind(position: Int) {
             super.onBind(position)
             val user = userList!![position]
-            if (user.names != null) {
-                txtName.text = user.names
+            if (user.name != null) {
+                txtName.text = user.name
             }
             if (user.email != null) {
                 txtEmail.text = user.email
