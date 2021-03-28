@@ -12,8 +12,10 @@ import retrofit2.Response
 
 
 class UserRepository(private val application: Application) {
+
     private var users: ArrayList<User>? = ArrayList()
     private val mutableLiveData = MutableLiveData<List<User>?>()
+
     fun getMutableLiveData(): MutableLiveData<List<User>?> {
         val apiService = apiService
         val call = apiService.userList
